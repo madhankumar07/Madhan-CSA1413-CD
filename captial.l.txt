@@ -1,6 +1,6 @@
 %%
 [A-Z]+[\t\n ] { printf("%s is a capital word\n",yytext); }
-[a-z]+[\t\n ] { printf("%s is a capital word\n",yytext); }
+[a-z]+[\t\n ] { printf("%s is a not capital word\n",yytext); }
 .  ;
 %%
 
