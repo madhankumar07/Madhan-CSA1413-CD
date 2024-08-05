@@ -26,7 +26,7 @@ int yywrap(void) {
 %%
 
 int main() {
-    printf("Enter numbers (end input with Ctrl+D):\n");
+    printf("Enter numbers (end input with Ctrl+z):\n");
 
     yylex();
 
