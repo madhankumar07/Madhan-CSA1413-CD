@@ -1,0 +1,28 @@
+%{
+#include <stdio.h>
+
+int chars = 0, words = 0, lines = 0;
+%}
+
+%%
+\/\/[^\n]*                  { /* Ignore single-line comments */ }
+\/\*([^*]|\*+[^*/])*\*+\/   { /* Ignore multi-line comments */ }
+\n                          { lines++; chars++; }  /* Increment line and character count for newlines */
+[ \t]+                      { /* Ignore redundant spaces and tabs */ }
+[A-Za-z_][A-Za-z0-9_]*      { words++; chars += yyleng; }  /* Match identifiers and increment word and char count */
+[{};:,.()+\-*/&|!<>=]       { chars += yyleng; }  /* Count punctuation and operators */
+.                           { chars++; }  /* Count any other single characters */
+%%
+
+int main() {
+	printf("Enter the string:\n");
+    yylex();
+    printf("Lines: %d\n", lines);
+    printf("Words: %d\n", words);
+    printf("Characters: %d\n", chars);
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

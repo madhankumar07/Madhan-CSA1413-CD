@@ -1,0 +1,45 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+int max_length = 0;
+int current_length = 0;
+
+int yywrap(void) {
+    return 1;
+}
+%}
+
+%%
+
+[A-Za-z]+    {
+                current_length = yyleng;
+                if (current_length > max_length) {
+                    max_length = current_length;
+                }
+             }
+
+[^A-Za-z]+   ; // Ignore non-word characters
+
+%%
+
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <inputfile>\n", argv[0]);
+        return 1;
+    }
+
+    FILE *input_file = fopen(argv[1], "r");
+    if (!input_file) {
+        perror("fopen");
+        return 1;
+    }
+
+    yyin = input_file;
+    yylex();
+    fclose(input_file);
+
+    printf("Length of the longest word: %d\n", max_length);
+
+    return 0;
+}

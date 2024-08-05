@@ -1,0 +1,31 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+
+"+"         { printf("PLUS\n"); }
+"-"         { printf("MINUS\n"); }
+"*"         { printf("MULTIPLY\n"); }
+"/"         { printf("DIVIDE\n"); }
+[ \t\n]+    ;  // Ignore whitespace
+.           { printf("UNKNOWN CHARACTER: %s\n", yytext); }
+
+%%
+
+int main(int argc, char *argv[]) {
+    // Open the file passed as an argument
+    if (argc > 1) {
+        yyin = fopen(argv[1], "r");
+        if (!yyin) {
+            perror(argv[1]);
+            return 1;
+        }
+    }
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

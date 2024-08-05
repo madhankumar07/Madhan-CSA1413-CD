@@ -1,0 +1,50 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+void print_token(char* token_name, char* lexeme) {
+    printf("<%s> : %s\n", token_name, lexeme);
+}
+%}
+
+%%
+
+"#include"        { print_token("PREPROCESSOR", yytext); }
+"<[a-zA-Z0-9_\\.]+>" { print_token("HEADER_FILE", yytext); }
+"void"            { print_token("KEYWORD", yytext); }
+"main"            { print_token("IDENTIFIER", yytext); }
+"int"             { print_token("KEYWORD", yytext); }
+"printf"          { print_token("FUNCTION", yytext); }
+"return"          { print_token("KEYWORD", yytext); }
+
+[a-zA-Z_][a-zA-Z0-9_]*  { print_token("IDENTIFIER", yytext); }
+[0-9]+           { print_token("NUMBER", yytext); }
+\"(\\.|[^\"])*\"  { print_token("STRING_LITERAL", yytext); }
+"=="             { print_token("EQUALITY_OPERATOR", yytext); }
+"="              { print_token("ASSIGNMENT_OPERATOR", yytext); }
+"\\+"            { print_token("ARITHMETIC_OPERATOR", yytext); }
+"-"              { print_token("ARITHMETIC_OPERATOR", yytext); }
+"\\*"            { print_token("ARITHMETIC_OPERATOR", yytext); }
+"/"              { print_token("ARITHMETIC_OPERATOR", yytext); }
+"<"              { print_token("RELATIONAL_OPERATOR", yytext); }
+">"              { print_token("RELATIONAL_OPERATOR", yytext); }
+"\\("            { print_token("LEFT_PARENTHESIS", yytext); }
+"\\)"            { print_token("RIGHT_PARENTHESIS", yytext); }
+"\\{"            { print_token("LEFT_CURLY_BRACE", yytext); }
+"\\}"            { print_token("RIGHT_CURLY_BRACE", yytext); }
+","              { print_token("COMMA", yytext); }
+";"              { print_token("SEMICOLON", yytext); }
+"\\s+"           { /* ignore whitespace */ }
+
+.                { printf("Unknown character: %s\n", yytext); }
+
+%%
+
+int main(void) {
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
